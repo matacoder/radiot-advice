@@ -60,3 +60,5 @@ progress/
 # Large binary files
 modules/core/tools/ffmpeg
 modules/core/tools/ffprobe
+
+transcribe_progress.txt
