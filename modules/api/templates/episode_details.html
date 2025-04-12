@@ -216,6 +216,27 @@
                         <div class="progress-bar" role="progressbar" style="width: 0%"></div>
                     </div>
                     <p id="task-status">Задача поставлена в очередь...</p>
+                    
+                    <!-- Блок с инструкциями по установке ffmpeg -->
+                    <div id="ffmpeg-error" class="alert alert-danger mt-3" style="display: none;">
+                        <h5><i class="fas fa-exclamation-triangle me-2"></i> Отсутствует FFMPEG</h5>
+                        <p>Для работы транскрибирования необходимо установить FFMPEG. У вас есть два варианта:</p>
+                        <h6>Вариант 1: Копирование файлов в проект (рекомендуется)</h6>
+                        <ol>
+                            <li>Скачайте FFMPEG с <a href="https://github.com/BtbN/FFmpeg-Builds/releases" target="_blank">GitHub (Windows)</a></li>
+                            <li>Распакуйте архив и найдите в папке bin файлы <code>ffmpeg.exe</code> и <code>ffprobe.exe</code></li>
+                            <li>Скопируйте эти файлы в папку <code>modules/core/tools/</code> в вашем проекте</li>
+                            <li>Перезапустите приложение</li>
+                        </ol>
+                        <h6>Вариант 2: Установка в систему</h6>
+                        <ol>
+                            <li>Скачайте FFMPEG с <a href="https://ffmpeg.org/download.html" target="_blank">официального сайта</a></li>
+                            <li>Распакуйте архив в любое удобное место, например, <code>C:\ffmpeg</code></li>
+                            <li>Добавьте путь до папки bin (<code>C:\ffmpeg\bin</code>) в переменную окружения PATH</li>
+                            <li>Перезапустите приложение</li>
+                        </ol>
+                    </div>
+                    
                     <div class="mt-2 small text-muted">
                         <i class="fas fa-info-circle me-1"></i> Обновляются только рекомендации без повторного скачивания и транскрибирования
                     </div>
@@ -298,6 +319,14 @@
                         // Обновляем прогресс и статус
                         document.querySelector('.progress-bar').style.width = `${data.progress}%`;
                         document.getElementById('task-status').textContent = data.message;
+                        
+                        // Проверяем наличие ошибки ffmpeg
+                        const ffmpegError = document.getElementById('ffmpeg-error');
+                        if (data.message && data.message.toLowerCase().includes('ffmpeg не установлен')) {
+                            ffmpegError.style.display = 'block';
+                        } else {
+                            ffmpegError.style.display = 'none';
+                        }
                         
                         // Если задача завершена, останавливаем опрос
                         if (data.status === 'completed' || data.status === 'failed') {

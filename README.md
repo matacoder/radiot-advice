@@ -31,9 +31,15 @@ pip install -r requirements.txt
 ```
 
 3. Установить FFmpeg (если не установлен):
-   - Windows: с [официального сайта](https://www.gyan.dev/ffmpeg/builds/) или `choco install ffmpeg`
-   - macOS: `brew install ffmpeg`
-   - Linux: `sudo apt install ffmpeg`
+   - **Вариант 1 (рекомендуется для Windows)**: 
+     - Скачать FFmpeg с [официального сайта](https://ffmpeg.org/download.html) или [с GitHub](https://github.com/BtbN/FFmpeg-Builds/releases)
+     - Скопировать файлы `ffmpeg.exe` и `ffprobe.exe` в каталог `modules/core/tools/` вашего проекта
+   - **Вариант 2**:
+     - Windows: установить с [официального сайта](https://www.gyan.dev/ffmpeg/builds/) или `choco install ffmpeg`
+     - macOS: `brew install ffmpeg`
+     - Linux: `sudo apt install ffmpeg`
+
+> **Примечание для Windows**: Если вы используете Windows, рекомендуется использовать Вариант 1, так как это позволяет избежать проблем с поиском пути к ffmpeg.
 
 4. Создать файл `.env` с ключом API OpenAI:
 ```
@@ -84,6 +90,27 @@ python run.py --process 123 --force-retranscribe
 ```bash
 docker-compose up
 ```
+
+## Устранение неполадок
+
+### Проблемы с FFmpeg
+
+Если вы видите ошибку вида "FFMPEG не установлен" или проблемы с запуском ffmpeg:
+
+1. **Для Windows**:
+   - Убедитесь, что в папке `modules/core/tools/` находятся файлы `ffmpeg.exe` и `ffprobe.exe`
+   - Проверьте, что файлы не заблокированы Windows (свойства файла → разблокировать)
+   - Попробуйте скопировать эти файлы также в корневую директорию проекта
+   
+2. **Для других операционных систем**:
+   - Убедитесь, что ffmpeg установлен и доступен в PATH
+   - Проверьте работу командой `ffmpeg -version`
+
+### Проблемы с транскрибированием
+
+Если возникают проблемы при транскрибировании:
+- Проверьте, достаточно ли оперативной памяти для работы модели Whisper
+- В файле `modules/utils/config.py` можно изменить параметр `WHISPER_MODEL` на более легкую модель (например, "small" вместо "medium")
 
 ## Лицензия
 

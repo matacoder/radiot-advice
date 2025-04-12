@@ -56,3 +56,7 @@ progress/
 # Logs
 *.log 
 .env.docker
+
+# Large binary files
+modules/core/tools/ffmpeg
+modules/core/tools/ffprobe

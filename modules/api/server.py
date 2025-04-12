@@ -5,6 +5,8 @@
 import os
 import json
 import logging
+import multiprocessing
+import platform
 from typing import List, Optional
 from fastapi import FastAPI, Request, BackgroundTasks, HTTPException, Form
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
@@ -60,27 +62,122 @@ class Recommendation(BaseModel):
 # Фоновые задачи
 running_tasks = {}
 
+# Установка метода запуска процессов для Windows - делаем это на уровне модуля
+if platform.system() == 'Windows':
+    try:
+        multiprocessing.set_start_method('spawn', force=True)
+    except RuntimeError:
+        # Если метод уже был установлен, игнорируем ошибку
+        pass
+
+# Функция для запуска в отдельном процессе - на верхнем уровне модуля
+def run_process_episode_task(episode_number, force_retranscribe, result_queue, progress_file):
+    """Функция для запуска в отдельном процессе"""
+    try:
+        # Импорт внутри функции для доступа к свежим данным в новом процессе
+        import os
+        from modules.core.podcast import process_episode as core_process_episode
+        import logging
+        
+        logger = logging.getLogger(__name__)
+        
+        # Функция обратного вызова для обновления статуса
+        def status_update_callback(message, progress):
+            if progress is not None:
+                result_queue.put(("update", message, progress))
+        
+        # Запуск обработки эпизода с функцией обратного вызова
+        result = core_process_episode(episode_number, force_retranscribe, status_update_callback)
+        
+        # Сообщаем результат
+        if result:
+            result_queue.put(("completed", "Эпизод успешно обработан", 100))
+        else:
+            result_queue.put(("failed", "При обработке эпизода возникли ошибки", 0))
+    except Exception as e:
+        import traceback
+        error_msg = f"Ошибка: {str(e)}\n{traceback.format_exc()}"
+        result_queue.put(("failed", error_msg, 0))
+        
+        # Удаление файла прогресса в случае ошибки
+        try:
+            if os.path.exists(progress_file):
+                os.remove(progress_file)
+                logger.info("Файл прогресса удален после ошибки")
+        except:
+            pass
+
 async def process_episode_task(episode_number: int, force_retranscribe: bool = False):
     """Фоновая задача для обработки эпизода"""
+    import os
+    
     task_id = f"episode_{episode_number}"
     running_tasks[task_id] = {"status": "running", "progress": 0, "message": "Начало обработки эпизода"}
     
-    try:
-        # Запуск обработки эпизода
-        running_tasks[task_id]["message"] = "Обработка эпизода..."
-        result = process_episode(episode_number, force_retranscribe)
+    # Очищаем файл прогресса транскрибирования перед запуском, если он существует
+    progress_file = "transcribe_progress.txt"
+    if os.path.exists(progress_file):
+        try:
+            os.remove(progress_file)
+            logger.info(f"Предыдущий файл прогресса удален")
+        except Exception as e:
+            logger.warning(f"Не удалось удалить файл прогресса: {str(e)}")
+    
+    # Создаем очередь для обмена данными между процессами
+    result_queue = multiprocessing.Queue()
+    
+    # Запускаем процесс с функцией верхнего уровня
+    process = multiprocessing.Process(
+        target=run_process_episode_task,
+        args=(episode_number, force_retranscribe, result_queue, progress_file)
+    )
+    process.daemon = True  # Процесс завершится, когда основной процесс завершится
+    process.start()
+    
+    # Запускаем задачу опроса статуса в фоновом режиме
+    import asyncio
+    
+    async def monitor_process():
+        while process.is_alive() or not result_queue.empty():
+            try:
+                if not result_queue.empty():
+                    status_type, message, progress = result_queue.get(block=False)
+                    
+                    if status_type == "update":
+                        running_tasks[task_id]["message"] = message
+                        running_tasks[task_id]["progress"] = progress
+                    elif status_type == "completed":
+                        running_tasks[task_id]["status"] = "completed"
+                        running_tasks[task_id]["message"] = message
+                        running_tasks[task_id]["progress"] = progress
+                        break
+                    elif status_type == "failed":
+                        running_tasks[task_id]["status"] = "failed"
+                        running_tasks[task_id]["message"] = message
+                        running_tasks[task_id]["progress"] = 0
+                        break
+                    
+                await asyncio.sleep(0.5)
+            except Exception as e:
+                logger.error(f"Ошибка при мониторинге процесса: {str(e)}")
+                running_tasks[task_id]["status"] = "failed"
+                running_tasks[task_id]["message"] = f"Ошибка мониторинга: {str(e)}"
+                break
         
-        if result:
-            running_tasks[task_id]["status"] = "completed"
-            running_tasks[task_id]["progress"] = 100
-            running_tasks[task_id]["message"] = "Эпизод успешно обработан"
-        else:
-            running_tasks[task_id]["status"] = "failed"
-            running_tasks[task_id]["message"] = "При обработке эпизода возникли ошибки"
-    except Exception as e:
-        running_tasks[task_id]["status"] = "failed"
-        running_tasks[task_id]["message"] = f"Ошибка: {str(e)}"
-        logger.error(f"Ошибка при обработке эпизода #{episode_number}: {str(e)}")
+        # Если процесс все еще работает, но мы вышли из цикла - что-то пошло не так
+        if process.is_alive():
+            process.terminate()
+            
+        # Убедимся, что файл прогресса транскрибирования удален при завершении мониторинга
+        try:
+            if os.path.exists(progress_file):
+                os.remove(progress_file)
+                logger.info("Файл прогресса удален при завершении мониторинга")
+        except Exception as e:
+            logger.warning(f"Не удалось удалить файл прогресса при завершении: {str(e)}")
+    
+    # Запускаем мониторинг асинхронно
+    asyncio.create_task(monitor_process())
 
 # Маршруты
 @app.get("/", response_class=HTMLResponse)

@@ -16,6 +16,7 @@ from datetime import datetime
 from pathlib import Path
 import logging
 import threading
+import platform
 
 try:
     import openai
@@ -41,19 +42,48 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Создаем директорию tools, если она не существует
+tools_dir = os.path.join(os.path.dirname(__file__), "tools")
+os.makedirs(tools_dir, exist_ok=True)
+
+# Получение пути к ffmpeg
+def get_ffmpeg_path():
+    """
+    Возвращает путь к ffmpeg, сначала проверяя локальную версию, а затем системную
+    """
+    # Проверяем наличие локальной версии ffmpeg
+    local_ffmpeg_path = os.path.join(os.path.dirname(__file__), "tools", "ffmpeg.exe")
+    
+    if os.path.exists(local_ffmpeg_path):
+        try:
+            subprocess.run([local_ffmpeg_path, '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+            logger.info("Используется локальная версия ffmpeg из папки проекта")
+            return local_ffmpeg_path
+        except (subprocess.SubprocessError, FileNotFoundError):
+            logger.warning("Не удалось запустить локальный ffmpeg, попробуем найти в системе")
+    
+    # Проверяем наличие системной версии ffmpeg
+    try:
+        subprocess.run(['ffmpeg', '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        logger.info("Используется системная версия ffmpeg")
+        return 'ffmpeg'
+    except (subprocess.SubprocessError, FileNotFoundError):
+        return None
+
 # Проверка наличия FFmpeg
 def check_ffmpeg():
-    """Проверяет, установлен ли FFmpeg, и выводит соответствующее сообщение"""
-    try:
-        subprocess.run(["ffmpeg", "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+    """
+    Проверяет наличие ffmpeg в системе или в локальной папке проекта
+    """
+    ffmpeg_path = get_ffmpeg_path()
+    
+    if ffmpeg_path:
         return True
-    except (subprocess.SubprocessError, FileNotFoundError):
-        print("ОШИБКА: FFmpeg не установлен или не найден в PATH.")
-        print("FFmpeg требуется для обработки аудио файлов.")
-        print("Инструкции по установке:")
-        print("  - Windows: https://www.gyan.dev/ffmpeg/builds/ или через chocolatey: choco install ffmpeg")
-        print("  - macOS: brew install ffmpeg")
-        print("  - Linux: sudo apt install ffmpeg или эквивалент для вашего дистрибутива")
+    else:
+        logger.error("FFMPEG не найден. Установите FFMPEG для корректной работы или скопируйте файлы в modules/core/tools/")
+        logger.error("Для Windows: скачайте с https://ffmpeg.org/download.html и добавьте в PATH или в папку проекта")
+        logger.error("Для Linux: sudo apt-get install ffmpeg")
+        logger.error("Для Mac: brew install ffmpeg")
         return False
 
 # Загрузка RSS и получение последнего эпизода
@@ -232,17 +262,95 @@ def transcribe_audio(audio_path, model_name=WHISPER_MODEL, language="ru", initia
     Returns:
         str: Полный транскрибированный текст или None в случае ошибки
     """
-    start_time = time.time()
+    # Проверяем наличие ffmpeg
+    ffmpeg_path = get_ffmpeg_path()
+    if not ffmpeg_path:
+        raise RuntimeError("FFMPEG не установлен. Транскрибирование невозможно.")
     
-    # Логируем начало процесса
-    logger.info(f"Загрузка модели Whisper {model_name}...")
+    # Создаем копию или символическую ссылку ffmpeg без расширения .exe для библиотеки whisper
+    tools_dir = os.path.dirname(ffmpeg_path)
+    ffmpeg_without_ext = os.path.join(tools_dir, "ffmpeg")
+    ffprobe_path = os.path.join(tools_dir, "ffprobe.exe")
+    ffprobe_without_ext = os.path.join(tools_dir, "ffprobe")
+    
+    if platform.system() == 'Windows' and ffmpeg_path.endswith('.exe') and not os.path.exists(ffmpeg_without_ext):
+        try:
+            # Для Windows копируем файл ffmpeg без расширения
+            import shutil
+            shutil.copy2(ffmpeg_path, ffmpeg_without_ext)
+            logger.info(f"Создана копия ffmpeg без расширения: {ffmpeg_without_ext}")
+        except Exception as e:
+            logger.warning(f"Не удалось создать копию ffmpeg без расширения: {str(e)}")
+    
+    # Также создаем копию ffprobe без расширения
+    if platform.system() == 'Windows' and os.path.exists(ffprobe_path) and not os.path.exists(ffprobe_without_ext):
+        try:
+            import shutil
+            shutil.copy2(ffprobe_path, ffprobe_without_ext)
+            logger.info(f"Создана копия ffprobe без расширения: {ffprobe_without_ext}")
+        except Exception as e:
+            logger.warning(f"Не удалось создать копию ffprobe без расширения: {str(e)}")
+    
+    # Добавляем директорию с ffmpeg в PATH - это критически важно для Windows
+    original_path = os.environ.get('PATH', '')
+    os.environ['PATH'] = f"{tools_dir}{os.pathsep}{original_path}"
+    logger.info(f"Добавлена директория {tools_dir} в PATH")
+    
+    # Также устанавливаем FFMPEG_PATH
+    os.environ["FFMPEG_PATH"] = ffmpeg_without_ext if os.path.exists(ffmpeg_without_ext) else ffmpeg_path
+    
+    # Копируем ffmpeg и ffprobe в корневой каталог проекта
+    try:
+        import shutil
+        # Определяем текущий рабочий каталог (корень проекта)
+        root_dir = os.getcwd()
+        
+        # Копируем с и без расширения .exe
+        if platform.system() == 'Windows':
+            # Копирование с расширением .exe
+            shutil.copy2(ffmpeg_path, os.path.join(root_dir, "ffmpeg.exe"))
+            if os.path.exists(ffprobe_path):
+                shutil.copy2(ffprobe_path, os.path.join(root_dir, "ffprobe.exe"))
+            
+            # Копирование без расширения
+            shutil.copy2(ffmpeg_path, os.path.join(root_dir, "ffmpeg"))
+            if os.path.exists(ffprobe_path):
+                shutil.copy2(ffprobe_path, os.path.join(root_dir, "ffprobe"))
+            
+            logger.info("Скопированы ffmpeg и ffprobe в корневой каталог проекта")
+    except Exception as e:
+        logger.warning(f"Предупреждение: не удалось скопировать ffmpeg: {str(e)}")
+    
+    # Добавляем корневой каталог проекта в PATH
+    os.environ['PATH'] = f"{root_dir}{os.pathsep}{os.environ['PATH']}"
+    logger.info(f"Добавлен рабочий каталог {root_dir} в PATH")
+    
+    # Проверяем существование аудио файла
+    if not os.path.exists(audio_path):
+        raise FileNotFoundError(f"Аудио файл не найден: {audio_path}")
+    
+    logger.info(f"Запуск процесса транскрибирования...")
+    
+    # Импорт модулей whisper и torch
+    import whisper
+    import torch
+    import threading
+    from pathlib import Path
+    
+    # Сигнал для остановки потока обновления статуса
+    stop_status_update = threading.Event()
+    status_thread = None
+    
+    # Очищаем файл прогресса, если он существует
+    progress_file = "transcribe_progress.txt"
+    if os.path.exists(progress_file):
+        try:
+            os.remove(progress_file)
+            logger.info("Предыдущий файл прогресса удален")
+        except Exception as e:
+            logger.warning(f"Не удалось удалить файл прогресса: {e}")
     
     try:
-        # Проверяем существование файла
-        if not os.path.exists(audio_path):
-            logger.error(f"Файл не найден: {audio_path}")
-            return None
-            
         # Проверка доступности CUDA
         device = "cuda" if torch.cuda.is_available() else "cpu"
         logger.info(f"Используется устройство: {device}")
@@ -258,15 +366,28 @@ def transcribe_audio(audio_path, model_name=WHISPER_MODEL, language="ru", initia
         
         # Функция для обновления статуса
         def status_update():
-            while True:
-                elapsed = time.time() - start_processing_time
-                logger.info(f"ПРОГРЕСС: Транскрибирование продолжается... Прошло времени: {int(elapsed)} сек.")
-                
-                # Запись в файл для проверки прогресса извне
-                with open("transcribe_progress.txt", "a") as f:
-                    f.write(f"{datetime.now().isoformat()} - Длительность: {int(elapsed)} сек.\n")
+            try:
+                while not stop_status_update.is_set():
+                    elapsed = time.time() - start_processing_time
+                    logger.info(f"ПРОГРЕСС: Транскрибирование продолжается... Прошло времени: {int(elapsed)} сек.")
                     
-                time.sleep(30)  # Обновление каждые 30 секунд
+                    # Запись в файл для проверки прогресса извне
+                    with open(progress_file, "a") as f:
+                        f.write(f"{datetime.now().isoformat()} - Длительность: {int(elapsed)} сек.\n")
+                    
+                    # Проверяем сигнал остановки каждые 5 секунд
+                    stop_status_update.wait(30)
+                
+                logger.info("Поток обновления статуса транскрибирования завершен")
+            except Exception as e:
+                logger.error(f"Ошибка в потоке обновления статуса: {e}")
+            finally:
+                # В любом случае записываем завершающее сообщение
+                try:
+                    with open(progress_file, "a") as f:
+                        f.write(f"{datetime.now().isoformat()} - Транскрибирование завершено или прервано\n")
+                except:
+                    pass
         
         # Запускаем поток обновления статуса
         status_thread = threading.Thread(target=status_update)
@@ -329,7 +450,7 @@ def transcribe_audio(audio_path, model_name=WHISPER_MODEL, language="ru", initia
             # Получение текста из результата без диаризации
             transcript = result["text"]
         
-        elapsed_time = time.time() - start_time
+        elapsed_time = time.time() - start_processing_time
         logger.info(f"Транскрибирование ЗАВЕРШЕНО за {elapsed_time:.2f} секунд")
         logger.info(f"Получено {len(transcript)} символов текста")
         
@@ -346,6 +467,27 @@ def transcribe_audio(audio_path, model_name=WHISPER_MODEL, language="ru", initia
         import traceback
         logger.error(traceback.format_exc())
         return None
+    
+    finally:
+        # Останавливаем поток обновления статуса
+        if stop_status_update:
+            stop_status_update.set()
+        
+        # Дожидаемся завершения потока обновления статуса
+        if status_thread and status_thread.is_alive():
+            try:
+                status_thread.join(timeout=5.0)  # Ждем не более 5 секунд
+                if status_thread.is_alive():
+                    logger.warning("Не удалось корректно завершить поток обновления статуса")
+            except:
+                pass
+            
+        # Закрываем файл прогресса с сообщением о завершении
+        try:
+            with open(progress_file, "a") as f:
+                f.write(f"{datetime.now().isoformat()} - Функция транскрибирования завершена\n")
+        except:
+            pass
 
 # Сохранение транскрипции
 def save_transcript(episode_number, transcript_text, model_name=WHISPER_MODEL):
@@ -576,13 +718,64 @@ def get_episode_status(episode_number):
     return status
 
 # Обработка эпизода целиком
-def process_episode(episode_number, force_retranscribe=False):
+def process_episode(episode_number, force_retranscribe=False, status_callback=None):
     """
     Полная обработка эпизода: скачивание, транскрибирование и извлечение рекомендаций
+    
+    Args:
+        episode_number: Номер эпизода
+        force_retranscribe: Принудительное повторное транскрибирование
+        status_callback: Функция обратного вызова для обновления статуса (message, progress_percent)
     
     Returns:
         bool: Успешно ли выполнена обработка
     """
+    def update_status(message, progress=None):
+        """Обновляет статус выполнения, если предоставлен callback"""
+        if status_callback:
+            status_callback(message, progress)
+        logger.info(message)
+    
+    # Проверяем наличие ffmpeg в самом начале
+    ffmpeg_path = get_ffmpeg_path()
+    if not ffmpeg_path:
+        update_status("FFMPEG не установлен. Обработка невозможна.", 0)
+        return False
+    
+    # Устанавливаем путь к ffmpeg для библиотек, которые его используют
+    os.environ["FFMPEG_PATH"] = ffmpeg_path
+    
+    # Копируем ffmpeg и ffprobe в корневой каталог проекта
+    try:
+        import shutil
+        # Определяем текущий рабочий каталог (корень проекта)
+        root_dir = os.getcwd()
+        # Получаем пути к ffprobe
+        ffprobe_path = os.path.join(os.path.dirname(ffmpeg_path), "ffprobe.exe")
+        
+        # Копируем с и без расширения .exe
+        if platform.system() == 'Windows':
+            # Копирование с расширением .exe
+            shutil.copy2(ffmpeg_path, os.path.join(root_dir, "ffmpeg.exe"))
+            if os.path.exists(ffprobe_path):
+                shutil.copy2(ffprobe_path, os.path.join(root_dir, "ffprobe.exe"))
+            
+            # Копирование без расширения
+            shutil.copy2(ffmpeg_path, os.path.join(root_dir, "ffmpeg"))
+            if os.path.exists(ffprobe_path):
+                shutil.copy2(ffprobe_path, os.path.join(root_dir, "ffprobe"))
+            
+            update_status("Скопированы ffmpeg и ffprobe в корневой каталог проекта", 2)
+    except Exception as e:
+        update_status(f"Предупреждение: не удалось скопировать ffmpeg: {str(e)}", 2)
+    
+    # Добавляем корневой каталог проекта в PATH
+    original_path = os.environ.get('PATH', '')
+    os.environ['PATH'] = f"{root_dir}{os.pathsep}{original_path}"
+    update_status(f"Добавлен рабочий каталог {root_dir} в PATH", 3)
+    
+    update_status(f"Начало обработки эпизода #{episode_number}", 5)
+    
     # Проверяем существование эпизода
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -592,9 +785,10 @@ def process_episode(episode_number, force_retranscribe=False):
     
     if result:
         episode_id, audio_url = result
-        logger.info(f"Найден эпизод #{episode_number} в базе данных (ID: {episode_id})")
+        update_status(f"Найден эпизод #{episode_number} в базе данных (ID: {episode_id})", 10)
     else:
         # Получаем информацию из RSS
+        update_status("Поиск эпизода в RSS ленте...", 8)
         episodes = get_all_episodes_from_rss(50)  # Получаем большой список для поиска
         episode_data = None
         
@@ -604,21 +798,24 @@ def process_episode(episode_number, force_retranscribe=False):
                 break
         
         if not episode_data:
-            logger.error(f"Эпизод #{episode_number} не найден ни в базе данных, ни в RSS.")
+            update_status(f"Эпизод #{episode_number} не найден ни в базе данных, ни в RSS.", 0)
             conn.close()
             return False
         
         # Сохраняем информацию в базу
         episode_id = save_episode_to_db(episode_data)
         audio_url = episode_data["audio_url"]
-        logger.info(f"Эпизод #{episode_number} добавлен в базу данных (ID: {episode_id})")
+        update_status(f"Эпизод #{episode_number} добавлен в базу данных (ID: {episode_id})", 15)
     
     # Скачивание аудио
+    update_status("Скачивание аудио файла...", 20)
     audio_path = download_episode(episode_number, audio_url)
     if not audio_path:
-        logger.error(f"Не удалось скачать эпизод #{episode_number}")
+        update_status(f"Не удалось скачать эпизод #{episode_number}", 0)
         conn.close()
         return False
+    
+    update_status("Аудио файл успешно скачан", 30)
     
     # Транскрибирование
     transcript_path = os.path.join(TRANSCRIPT_DIR, f"episode_{episode_number}_transcript.txt")
@@ -627,13 +824,15 @@ def process_episode(episode_number, force_retranscribe=False):
     need_update = should_update_transcript(episode_number, force_update=force_retranscribe)
     
     if os.path.exists(transcript_path) and not need_update:
-        logger.info(f"Найдена существующая транскрипция: {transcript_path}")
+        update_status(f"Найдена существующая транскрипция: {transcript_path}", 40)
         with open(transcript_path, 'r', encoding='utf-8') as f:
             transcript = f.read()
-        logger.info(f"Загружена существующая транскрипция (длина: {len(transcript)} символов)")
+        update_status(f"Загружена существующая транскрипция (длина: {len(transcript)} символов)", 50)
     else:
         if need_update and os.path.exists(transcript_path):
-            logger.info(f"Обнаружена смена модели или флаг принудительного обновления. Запускаем новую транскрипцию...")
+            update_status(f"Обнаружена смена модели или флаг принудительного обновления. Запускаем новую транскрипцию...", 35)
+        
+        update_status("Запуск процесса транскрибирования. Это может занять длительное время...", 40)
         
         # Транскрибирование аудио с использованием локальной модели Whisper
         transcript = transcribe_audio(
@@ -650,12 +849,13 @@ def process_episode(episode_number, force_retranscribe=False):
         )
         
         if not transcript:
-            logger.error(f"Не удалось транскрибировать эпизод #{episode_number}")
+            update_status(f"Не удалось транскрибировать эпизод #{episode_number}", 0)
             conn.close()
             return False
         
         # Сохранение транскрипции
         save_transcript(episode_number, transcript, WHISPER_MODEL)
+        update_status("Транскрибирование завершено успешно", 60)
     
     # Обновление статуса эпизода: транскрибирован
     update_episode_status(episode_id, 1)
@@ -663,33 +863,34 @@ def process_episode(episode_number, force_retranscribe=False):
     # Загрузка API ключа для анализа текста
     api_key = load_api_key()
     if not api_key:
-        logger.error("API ключ OpenAI не найден. Невозможно извлечь рекомендации.")
+        update_status("API ключ OpenAI не найден. Невозможно извлечь рекомендации.", 0)
         conn.close()
         return False
     
     # Проверка работоспособности API ключа
     if not check_openai_api_key(api_key):
-        logger.error("API ключ OpenAI не работает. Проверьте квоту и лимиты.")
+        update_status("API ключ OpenAI не работает. Проверьте квоту и лимиты.", 0)
         conn.close()
         return False
     
     # Извлечение рекомендаций
+    update_status("Извлечение рекомендаций из транскрипции...", 70)
     recommendations = extract_recommendations(transcript, episode_number, api_key)
     
     if not recommendations:
-        logger.error(f"Не удалось извлечь рекомендации для эпизода #{episode_number}")
+        update_status(f"Не удалось извлечь рекомендации для эпизода #{episode_number}", 0)
         conn.close()
         return False
     
     # Сохранение рекомендаций в БД
+    update_status("Сохранение рекомендаций в базу данных...", 90)
     from modules.utils.database import save_recommendations_to_db
     rec_count = save_recommendations_to_db(recommendations, episode_id)
     
     # Обновление статуса эпизода: полностью обработан
     update_episode_status(episode_id, 2)
     
-    logger.info(f"Обработка эпизода #{episode_number} успешно завершена")
-    logger.info(f"Извлечено {rec_count} рекомендаций")
+    update_status(f"Обработка эпизода #{episode_number} успешно завершена. Извлечено {rec_count} рекомендаций", 100)
     
     conn.close()
     return True 
