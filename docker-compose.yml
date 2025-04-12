@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  radiot-transcriber:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./downloads:/app/downloads:ro
+      - ./transcripts:/app/transcripts
+      - ./recommendations:/app/recommendations
+      - ./models:/root/.cache/whisper
+      - ./database:/app/database
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=sqlite:///./database/radiot_advice.db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    env_file:
+      - .env.docker 

@@ -1,0 +1,602 @@
+[
+  {
+    "name": "OpenAI",
+    "description": "OpenAI - исследовательская организация, разрабатывающая искусственный интеллект.",
+    "hosts_opinion": "Прекрасен OpenAI-овский Мандай.",
+    "ai_comment": "Интересно, какой еще образ у робота Мандай.",
+    "website": "https://www.openai.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "MandAI",
+    "description": "Робот, обладающий обсессивно-депрессивным характером, созданный OpenAI.",
+    "hosts_opinion": "Прекрасен OpenAI-овский Мандай.",
+    "ai_comment": "Мандай, наверное, не самый веселый собеседник.",
+    "website": "https://www.openai.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "Cloud Code",
+    "description": "Плагин для разработки в облаке в среде разработки.",
+    "hosts_opinion": "Клод Коджи начал тоже шутить на 1 апреля.",
+    "ai_comment": "Клод Коджи, наверное, любит использовать Cloud Code.",
+    "website": "https://cloud.google.com/code",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 80
+  },
+  {
+    "name": "Hitchhiker's Guide for the Galaxy",
+    "description": "Книга Дугласа Адамса, популярная в научно-фантастической литературе.",
+    "hosts_opinion": "Помните робота Марвина из Hitchhiker's Guide for the Galaxy?",
+    "ai_comment": "Марвин - робот с чувством иронии.",
+    "website": "https://en.wikipedia.org/wiki/The_Hitchhiker%27s_Guide_to_the_Galaxy",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "Java",
+    "description": "Популярный язык программирования, ориентированный на объекты.",
+    "hosts_opinion": "Я даже себе не представляю. Знаешь, может, лучше на Basic?",
+    "ai_comment": "Java - как кусок хлеба с маслом для программистов.",
+    "website": "https://www.java.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "Go",
+    "description": "Простой, быстрый и надежный язык программирования, разработанный в Google.",
+    "hosts_opinion": "Я понимаю, насколько Go вообще реально в другом... С точки зрения мышления, с другого менталитета живет.",
+    "ai_comment": "Go - когда хочется простоты и эффективности в разработке.",
+    "website": "https://golang.org/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "JDK",
+    "description": "Java Development Kit - набор инструментов для разработки на Java.",
+    "hosts_opinion": "Пропозал, который собирается сделать изменения в JDK.",
+    "ai_comment": "Интересно, какие изменения предлагаются для JDK.",
+    "website": "https://www.oracle.com/java/technologies/javase-jdk11-downloads.html",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "PyTest",
+    "description": "Фреймворк для написания тестов на языке Python.",
+    "hosts_opinion": "Какие там в тестах? Как база попала в тест? Все вот эти вот дзен питона про простое, лучшее, очевидное, лучшее.",
+    "ai_comment": "PyTest - инструмент для тестирования Python-приложений.",
+    "website": "https://docs.pytest.org/en/6.2.x/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "Python",
+    "description": "Язык программирования, известный своей простотой и удобством. Часто используется для разработки веб-приложений, научных вычислений и автоматизации задач.",
+    "hosts_opinion": "Умпутун находит язык Python довольно приятным и понятным.",
+    "ai_comment": "Python — как швейцарский нож: подходит для множества задач.",
+    "website": "https://www.python.org/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 95
+  },
+  {
+    "name": "OpenAI",
+    "description": "Исследовательская организация, занимающаяся искусственным интеллектом. Известна разработкой различных AI-технологий.",
+    "hosts_opinion": "Umputun упоминает использование OpenAI для обработки данных.",
+    "ai_comment": "OpenAI — глубокое погружение в мир искусственного интеллекта.",
+    "website": "https://www.openai.com/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "MyPy",
+    "description": "Инструмент для статической типизации в Python. Позволяет проверять типы данных в коде на этапе разработки.",
+    "hosts_opinion": "Umputun упоминает использование MyPy для проверки типов в своем коде.",
+    "ai_comment": "MyPy — как надежный страж порядка в мире динамической типизации Python.",
+    "website": "http://mypy-lang.org/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "FastAPI",
+    "description": "Веб-фреймворк для Python, который позволяет быстро создавать API. Известен своей производительностью и простотой использования.",
+    "hosts_opinion": "Umputun упоминает использование FastAPI для разработки веб-приложений.",
+    "ai_comment": "FastAPI — как стрела, летящая к цели разработки API.",
+    "website": "https://fastapi.tiangolo.com/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 80
+  },
+  {
+    "name": "Go",
+    "description": "Компилируемый язык программирования, ориентированный на производительность и простоту разработки. Часто используется для создания микросервисов и инфраструктуры.",
+    "hosts_opinion": "Umputun высказывает восхищение по поводу Go и называет его прекрасным языком.",
+    "ai_comment": "Go — как надежный партнер в разработке высоконагруженных систем.",
+    "website": "https://golang.org/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "Java",
+    "description": "Универсальный язык программирования, широко используемый для создания различных приложений. Известен своей надежностью и кроссплатформенностью.",
+    "hosts_opinion": "Umputun упоминает использование Java в контексте Blink.ai.",
+    "ai_comment": "Java — как долгожданный стандарт в мире разработки приложений.",
+    "website": "https://www.java.com/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 80
+  },
+  {
+    "name": "JRA Final",
+    "description": "Программа или продукт, связанный с настройкой, возможно, какой-то инструмент для управления настройками.",
+    "hosts_opinion": "Не понравилось, так как была упомянута в контексте сломанной настройки.",
+    "ai_comment": "Интересно, что это за программа, вызывающая такие негативные эмоции.",
+    "website": "unknown",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 70
+  },
+  {
+    "name": "Python",
+    "description": "Популярный язык программирования, используемый для разработки различных приложений.",
+    "hosts_opinion": "Упомянут в контексте потраченных средств.",
+    "ai_comment": "Python всегда на слуху, даже когда его вырезают.",
+    "website": "https://www.python.org/",
+    "mentioned_by": "Ksenks",
+    "timestamp": "00:00:00",
+    "confidence": 100
+  },
+  {
+    "name": "Microsoft",
+    "description": "Корпорация, занимающаяся разработкой программного обеспечения, аппаратных средств и других технологий.",
+    "hosts_opinion": "Упомянута в контексте 50-летнего юбилея.",
+    "ai_comment": "Microsoft — как старый друг, всегда в центре внимания.",
+    "website": "https://www.microsoft.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 100
+  },
+  {
+    "name": "Basic для Altair",
+    "description": "Исходный код Basic для Altair, первого продукта Microsoft.",
+    "hosts_opinion": "Упомянут в контексте выкладывания исходного кода.",
+    "ai_comment": "Интересно, какие другие исходники могут быть еще найдены.",
+    "website": "unknown",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "Z80",
+    "description": "Микропроцессор, используемый во многих компьютерах и устройствах.",
+    "hosts_opinion": "Упомянут в контексте сравнения с другими микропроцессорами.",
+    "ai_comment": "Z80 — как старый друг из мира компьютеров.",
+    "website": "https://en.wikipedia.org/wiki/Zilog_Z80",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 95
+  },
+  {
+    "name": "PDP-11",
+    "description": "Серия миникомпьютеров, разработанных компанией Digital Equipment Corporation.",
+    "hosts_opinion": "Упомянут в контексте системы команд.",
+    "ai_comment": "PDP-11 — легендарная серия компьютеров, оставившая след в истории.",
+    "website": "https://en.wikipedia.org/wiki/PDP-11",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "GPT-4",
+    "description": "Генеративно-предиктивная трансформерная модель, версия 4.",
+    "hosts_opinion": "Упомянут в контексте прогнозов о развитии искусственного интеллекта.",
+    "ai_comment": "GPT-4 — новая версия модели, вызывающая интерес и обсуждения.",
+    "website": "https://en.wikipedia.org/wiki/GPT-4",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 100
+  },
+  {
+    "name": "OpenAI",
+    "description": "Исследовательская организация, занимающаяся искусственным интеллектом.",
+    "hosts_opinion": "Упомянута в контексте сравнения с другими моделями искусственного интеллекта.",
+    "ai_comment": "OpenAI — ключевой игрок в области искусственного интеллекта.",
+    "website": "https://www.openai.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 100
+  },
+  {
+    "name": "OpenAI",
+    "description": "Компания, занимающаяся искусственным интеллектом и машинным обучением.",
+    "hosts_opinion": "Упомянут в контексте работы философа в OpenAI.",
+    "ai_comment": "OpenAI — это как золотое кольцо в мире искусственного интеллекта.",
+    "website": "https://www.openai.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 95
+  },
+  {
+    "name": "SuperLignment Team",
+    "description": "Команда, занимающаяся вопросами безопасности и встроенности искусственного интеллекта в жизнь.",
+    "hosts_opinion": "Упомянута в контексте ухода участников из OpenAI.",
+    "ai_comment": "SuperLignment Team — как охрана безопасности для искусственного интеллекта.",
+    "website": "unknown",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "Substack",
+    "description": "Платформа для создания и распространения писем и подписок.",
+    "hosts_opinion": "Упомянут в контексте блога психиатра на Substack.",
+    "ai_comment": "Substack — место, где слова становятся подпиской.",
+    "website": "https://substack.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "AI",
+    "description": "Искусственный интеллект, способный выполнять различные задачи, включая генерацию кода и анализ.",
+    "hosts_opinion": "Обсуждается использование AI для различных целей, включая генерацию кода и оптимизацию.",
+    "ai_comment": "AI — как магия, которая иногда удивляет даже своих создателей.",
+    "website": "unknown",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 95
+  },
+  {
+    "name": "Bootstrap",
+    "description": "Фреймворк для разработки веб-приложений и сайтов.",
+    "hosts_opinion": "Обсуждается использование Bootstrap для создания новых проектов.",
+    "ai_comment": "Bootstrap — как надежный инструмент для быстрой разработки веб-приложений.",
+    "website": "https://getbootstrap.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "OpenAI",
+    "description": "OpenAI — исследовательская организация, разрабатывающая и продвигающая искусственный интеллект.",
+    "hosts_opinion": "Умпутун упоминает, что обнаружил ошибку в коде благодаря OpenAI.",
+    "ai_comment": "OpenAI — это как лупа для программистов: помогает увидеть ошибки, которые могли быть упущены.",
+    "website": "https://www.openai.com/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "GPT-4",
+    "description": "GPT-4 — модель глубокого обучения для генерации текста, разработанная OpenAI.",
+    "hosts_opinion": "Umputun упоминает, что использовал модель GPT-4 в своем коде.",
+    "ai_comment": "GPT-4: когда хочешь, чтобы код был написан человеческим языком, а не AI-овским.",
+    "website": "https://www.openai.com/gpt-4/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "JavaScript",
+    "description": "JavaScript — язык программирования, используемый для создания интерактивных веб-сайтов.",
+    "hosts_opinion": "Umputun упоминает, что в JavaScript возможно линт-ошибки.",
+    "ai_comment": "JavaScript: когда даже ошибки называют линтами, чтобы звучало профессионально.",
+    "website": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 80
+  },
+  {
+    "name": "TypeScript",
+    "description": "TypeScript — язык программирования, расширяющий возможности JavaScript путем добавления статической типизации.",
+    "hosts_opinion": "Umputun упоминает, что в TypeScript возможно линт-ошибки.",
+    "ai_comment": "TypeScript: когда даже ошибки называют линтами, чтобы звучало профессионально.",
+    "website": "https://www.typescriptlang.org/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 80
+  },
+  {
+    "name": "Go",
+    "description": "Go (или Golang) — компилируемый язык программирования, созданный в Google, известный своей производительностью и простотой.",
+    "hosts_opinion": "Umputun упоминает, что на Go ошибки не называют линтами, а они являются реальными ошибками.",
+    "ai_comment": "Go: когда ошибки — это не просто линт-ошибки, а серьезные проблемы, которые нужно исправлять.",
+    "website": "https://golang.org/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "Google Spreadsheets",
+    "description": "Google Spreadsheets — онлайн-таблицы, позволяющие создавать и редактировать электронные таблицы в облаке.",
+    "hosts_opinion": "Umputun упоминает, что делал экстеншн для Google Spreadsheets.",
+    "ai_comment": "Google Spreadsheets: когда хочешь автоматизировать работу с таблицами, но сталкиваешься с неожиданными сложностями.",
+    "website": "https://www.google.com/sheets/about/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "Google Cloud Platform (GCP)",
+    "description": "Google Cloud Platform — облачная платформа от Google, предоставляющая широкий спектр облачных услуг.",
+    "hosts_opinion": "Umputun упоминает, что для деплоя скрипта в Google Cloud нужно выполнить ряд сложных действий.",
+    "ai_comment": "Google Cloud Platform: когда хочешь задеплоить что-то, а оказывается, что это не так просто, как казалось.",
+    "website": "https://cloud.google.com/",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "Apps Script",
+    "description": "Apps Script — скриптовый язык для автоматизации задач в Google Workspace (Google Sheets, Docs, etc.).",
+    "hosts_opinion": "Umputun упоминает, что нужно залинковать приложение из Apps Script на Google Cloud.",
+    "ai_comment": "Apps Script: когда хочешь автоматизировать задачи в Google Workspace, но сталкиваешься с трудностями интеграции.",
+    "website": "https://developers.google.com/apps-script",
+    "mentioned_by": "Umputun",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "SQL Alchemy",
+    "description": "Библиотека для работы с базами данных на языке Python.",
+    "hosts_opinion": "Ведущий столкнулся с проблемой редактирования Primary Key и не смог решить ее.",
+    "ai_comment": "Иногда даже тривиальные задачи могут стать вызовом, если возникают сложности в работе с библиотеками.",
+    "website": "https://www.sqlalchemy.org/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "Terraform",
+    "description": "Инструмент для управления инфраструктурой как кодом.",
+    "hosts_opinion": "Ведущий упомянул его в контексте возникновения сложностей при работе.",
+    "ai_comment": "Иногда сложности с инструментами автоматизации могут вызвать разочарование.",
+    "website": "https://www.terraform.io/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "Pulumi",
+    "description": "Инструмент для управления облачной инфраструктурой.",
+    "hosts_opinion": "Ведущие упомянули его в контексте перехода на новую подписку и желания заработать больше денег.",
+    "ai_comment": "Иногда изменения в ценовой политике могут вызвать недовольство у пользователей.",
+    "website": "https://www.pulumi.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 80
+  },
+  {
+    "name": "Copilot",
+    "description": "Искусственный интеллект, помогающий в написании кода.",
+    "hosts_opinion": "Ведущие обсуждали новый план подписки и цены на использование моделей.",
+    "ai_comment": "Интересно, как различные модели оплаты могут повлиять на восприятие продукта пользователями.",
+    "website": "https://copilot.github.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "OpenAI",
+    "description": "Исследовательская организация, занимающаяся искусственным интеллектом.",
+    "hosts_opinion": "Ведущие обсуждали проблемы с API и изменениями в библиотеке.",
+    "ai_comment": "Иногда изменения в API могут вызвать неожиданные проблемы у разработчиков.",
+    "website": "https://www.openai.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "VS Code",
+    "description": "Интегрированная среда разработки от Microsoft.",
+    "hosts_opinion": "Ведущие обсуждали использование VS Code для общения в чате и предпочтение терминального кода.",
+    "ai_comment": "Иногда выбор среды разработки зависит от индивидуальных предпочтений и задач.",
+    "website": "https://code.visualstudio.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "Vim",
+    "description": "Текстовый редактор с открытым исходным кодом, позволяющий редактировать текст без использования мыши.",
+    "hosts_opinion": "Не упомянуто",
+    "ai_comment": "Vim — это как любовь: сложно в начале, но потом не можешь без него.",
+    "website": "https://www.vim.org/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "Google Cloud Code",
+    "description": "Набор инструментов для разработки в облаке, включающий в себя средства для написания, тестирования и отладки кода.",
+    "hosts_opinion": "Упомянуто в контексте сравнения с другими инструментами.",
+    "ai_comment": "Google Cloud Code — как путеводная звезда в мире облачной разработки.",
+    "website": "https://cloud.google.com/code",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "Sonnet 3.7",
+    "description": "Версия программы для работы с контекстом и искусственным интеллектом.",
+    "hosts_opinion": "Упомянуто в контексте сравнения с другими программами.",
+    "ai_comment": "Sonnet 3.7 — когда нужно не просто работать с контекстом, а делать это эффективно.",
+    "website": "недоступно",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 80
+  },
+  {
+    "name": "Project Progress",
+    "description": "Функционал для записи прогресса проекта, включая снапшоты и историю изменений.",
+    "hosts_opinion": "Упомянуто в контексте использования с курсором.",
+    "ai_comment": "Project Progress — как дневник разработчика, который помогает не потеряться в деталях проекта.",
+    "website": "недоступно",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 75
+  },
+  {
+    "name": "JetBrains AI",
+    "description": "Искусственный интеллект от JetBrains, предназначенный для помощи разработчикам в написании кода.",
+    "hosts_opinion": "Упомянуто в контексте развития и использования для Java и Kotlin.",
+    "ai_comment": "JetBrains AI — как надежный помощник, который знает толк в Java и Kotlin.",
+    "website": "https://www.jetbrains.com/ai-assistant/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "GitHub Pro",
+    "description": "Платная версия GitHub с дополнительными возможностями, включая новые модели и ограниченный доступ к GPT 4.5.",
+    "hosts_opinion": "Упомянуто в контексте изменений в тарифах и предоставляемых услугах.",
+    "ai_comment": "GitHub Pro — когда хочется больше возможностей для работы с репозиториями.",
+    "website": "https://github.com/pricing",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 80
+  },
+  {
+    "name": "Switch 2",
+    "description": "Предполагаемая новая модель игровой консоли Nintendo Switch.",
+    "hosts_opinion": "Упомянуто в контексте ожиданий и отложения выхода.",
+    "ai_comment": "Switch 2 — когда хочется новых игровых приключений от Nintendo.",
+    "website": "недоступно",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 70
+  },
+  {
+    "name": "Hamilton",
+    "description": "Американская компания, производящая часы, известная своими механическими моделями.",
+    "hosts_opinion": "Упомянуто в контексте истории производства часов.",
+    "ai_comment": "Hamilton — когда история и качество встречаются в механических часах.",
+    "website": "https://www.hamiltonwatch.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 75
+  },
+  {
+    "name": "Nike",
+    "description": "Мировой бренд спортивной обуви, одежды и аксессуаров.",
+    "hosts_opinion": "Упомянуто в контексте изменений в производстве.",
+    "ai_comment": "Nike — когда стиль и комфорт важны не только на спортивной площадке.",
+    "website": "https://www.nike.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 70
+  },
+  {
+    "name": "Apple",
+    "description": "Компания, производящая электронику, включая iPhone, MacBook и другие устройства.",
+    "hosts_opinion": "Упомянуто в контексте изменений в производстве.",
+    "ai_comment": "Apple — когда дизайн и инновации становятся образцом для других.",
+    "website": "https://www.apple.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 75
+  },
+  {
+    "name": "Microsoft",
+    "description": "Корпорация, занимающаяся разработкой программного обеспечения, аппаратных средств и предоставлением услуг в сфере информационных технологий.",
+    "hosts_opinion": "Меняли условия работы с экстеншенами для VS Code, что вызвало обсуждение.",
+    "ai_comment": "Интересно, какие еще изменения готовит Microsoft для своих продуктов...",
+    "website": "https://www.microsoft.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "Cursor.ai",
+    "description": "Конкурент Microsoft, предположительно, разрабатывающий агентский режим для VS Code.",
+    "hosts_opinion": "Упомянут как конкурент Microsoft в контексте VS Code.",
+    "ai_comment": "Конкуренция в сфере разработки инструментов для программистов — весело!",
+    "website": "unknown",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 70
+  },
+  {
+    "name": "VS Code",
+    "description": "Интегрированная среда разработки от Microsoft для написания кода на различных языках программирования.",
+    "hosts_opinion": "Обсуждение изменений в работе с экстеншенами и агентским режимом.",
+    "ai_comment": "VS Code — один из любимых инструментов многих разработчиков по всему миру.",
+    "website": "https://code.visualstudio.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 95
+  },
+  {
+    "name": "Cloudflare",
+    "description": "Компания, предоставляющая услуги CDN, DDoS-защиты, безопасности веб-сайтов и другие сетевые услуги.",
+    "hosts_opinion": "Сообщает о высоком проценте использования скомпрометированных паролей.",
+    "ai_comment": "Безопасность в интернете — это серьезно, даже для крупных компаний.",
+    "website": "https://www.cloudflare.com/",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "Severance",
+    "description": "Сериал, который обсуждают ведущие. Разговор идет о первом и втором сезонах, впечатлениях от просмотра.",
+    "hosts_opinion": "Разные мнения: Ксюша понравился второй сезон больше, а другие неоднозначно относятся к сериалу.",
+    "ai_comment": "Сериал вызывает разные эмоции у ведущих, что может быть интересным для аудитории.",
+    "website": "недоступно",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 90
+  },
+  {
+    "name": "Westworld",
+    "description": "Сериал, который обсуждают в контексте качества сезонов. Первый сезон хвалят, второй сезон считают менее удачным.",
+    "hosts_opinion": "По мнению ведущих, после первого сезона смотреть второй не стоит.",
+    "ai_comment": "Интересно узнать, какие сериалы разочаровали вас после первого сезона.",
+    "website": "недоступно",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  },
+  {
+    "name": "Lost",
+    "description": "Сериал, который вызывает разные мнения у ведущих. Некоторые считают, что последние сезоны неудачные.",
+    "hosts_opinion": "Различные мнения: Ксюша не уверена, а другие вспоминают хорошие сезоны.",
+    "ai_comment": "Lost — классика сериалов, который вызывает споры о финале и качестве последних сезонов.",
+    "website": "недоступно",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 80
+  },
+  {
+    "name": "Eleven Lips",
+    "description": "Программа для прослушивания аудиокниг. Отмечается, что чтец иногда читает неестественно, что способствует засыпанию.",
+    "hosts_opinion": "Программа рекомендуется для использования перед сном.",
+    "ai_comment": "Интересный подход к выбору программы для засыпания, может быть полезным для бессонных слушателей.",
+    "website": "недоступно",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 75
+  },
+  {
+    "name": "МОКа-пот",
+    "description": "Тип кофеварки, используемый для приготовления кофе методом пролива. Позволяет получить насыщенный вкус кофе.",
+    "hosts_opinion": "Один из ведущих описывает свой способ приготовления кофе и предпочтения в кофейных напитках.",
+    "ai_comment": "Кофе — важная часть жизни многих людей, и каждый имеет свой уникальный подход к его приготовлению.",
+    "website": "недоступно",
+    "mentioned_by": "unknown",
+    "timestamp": "",
+    "confidence": 85
+  }
+]
